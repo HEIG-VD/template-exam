@@ -25,3 +25,45 @@ jobs:
           name: exam
           path: build
           if-no-files-found: error
+
+    release:
+      name: Create Release
+      needs: build
+      runs-on: ubuntu-latest
+      if: startsWith(github.ref, 'refs/tags')
+      steps:
+        - name: Create Release
+          id: create_release
+          uses: actions/create-release@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          with:
+            tag_name: ${{ github.ref }}
+            release_name: Release ${{ github.ref }}
+            draft: false
+            prerelease: false
+        - name: Download artifacts
+          uses: actions/download-artifact@v2
+          with:
+            name: pdf
+            path: dist
+        - name: Upload Exam
+          id: upload-pdf-report
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/exam.pdf
+            asset_name: exam.pdf
+            asset_content_type: application/pdf
+        - name: Upload Solution
+          id: upload-pdf-solution
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/solution.pdf
+            asset_name: solution.pdf
+            asset_content_type: application/pdf

@@ -4,7 +4,7 @@ EXECS=$(SRC:.c=.out)
 CFLAGS=-Wall -Wextra -Werror -std=c11 -pedantic -O3 -g
 TEXSRC=$(wildcard *.tex)
 
-all: release
+all: dist
 
 config.tex: config.m.tex | config.yml ./tools/parse-yml.py
 	./tools/parse-yml.py config.yml > $@ < $<
@@ -20,9 +20,8 @@ solution.pdf: exam.tex FORCE | config.tex code $(TEXSRC)
 
 code: $(EXECS)
 
-release: assembly exam.pdf solution.pdf
-	mkdir -p release
-	cp p*.pdf $@
+dist: exam.pdf solution.pdf
+	mkdir -p $@
 	cp exam.pdf solution.pdf $@
 
 clean:
@@ -36,4 +35,4 @@ clean:
 	$(RM) -rf release
 FORCE:
 
-.PHONY: clean all assembly
+.PHONY: clean all
