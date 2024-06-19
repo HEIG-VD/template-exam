@@ -20,6 +20,29 @@ Les objectifs de génération sont :
 - isoler les problèmes en des feuillets indépendants ;
 - faciliter le tirage et l'assemblage.
 
+## Utilisation
+
+### Editer les métadonnées
+
+Le fichier `config.yml` contient les métadonnées de l'examen. Il est possible de modifier le titre, le nom des auteurs, la date etc.
+
+Ce fichier est méta-génère `config.tex` qui est inclus dans le fichier `exam.tex`.
+
+### Editer les consignes de l'examen
+
+Le fichier `directives.tex` contient les consignes de l'examen. Il est possible de modifier les consignes à votre convenance.
+
+### Ajouter des problèmes
+
+Chaque problème est un fichier séparé nommé `problemX.tex` où `X` est le numéro du problème. Il est possible d'ajouter autant de problèmes que nécessaire. Renseignez le fichier `exam.tex` le nombre de problèmes pour en inclure davantage.
+
+### Générer l'examen
+
+Pour générer l'examen, il suffit de lancer la commande `make` depuis un terminal. L'examen est généré dans :
+
+- `dist/exam.pdf` : l'examen complet ;
+- `dist/solution.pdf` : l'examen complet avec les solutions.
+
 ## Prérequis
 
 - Docker ou

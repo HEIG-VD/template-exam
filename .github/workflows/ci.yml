@@ -21,7 +21,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: exam
-          path: dist
+          path: |
+            build/exam.pdf
+            build/solution.pdf
           if-no-files-found: error
   release:
     name: Create Release

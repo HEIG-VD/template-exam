@@ -3,28 +3,27 @@ SRC=$(wildcard assets/*.c)
 EXECS=$(SRC:.c=.out)
 CFLAGS=-Wall -Wextra -Werror -std=c11 -pedantic -O3 -g
 TEXSRC=$(wildcard *.tex)
+BUILDDIR=build
+LATEXMK=TEXMFHOME=$(shell pwd)/texmf texfot latexmk
 
-all: dist
+all: exam.pdf solution.pdf
 
-config.tex: config.m.tex | config.yml ./tools/parse-yml.py
-	./tools/parse-yml.py config.yml > $@ < $<
+$(BUILDDIR)/config.tex: config.yml | tools/config.m.tex tools/parse-yml.py
+	./tools/parse-yml.py $< > $@ < tools/config.m.tex
 
-exam.pdf: exam.tex FORCE | config.tex code $(TEXSRC)
-	latexmk --shell-escape -pdf -jobname=$(basename $@) $<
+exam.pdf: exam.tex FORCE | $(BUILDDIR)/config.tex code $(TEXSRC)
+	$(LATEXMK) -jobname=$(basename $@) $<
 
-solution.pdf: exam.tex FORCE | config.tex code $(TEXSRC)
-	latexmk --shell-escape -pdf -jobname=$(basename $@) -pdflatex='xelatex %O "\PassOptionsToClass{answers}{exam}\input{%S}"' $<
+solution.pdf: exam.tex FORCE | $(BUILDDIR)/config.tex code $(TEXSRC)
+	$(LATEXMK) -jobname=$(basename $@) -pdflatex='xelatex %O "\PassOptionsToClass{answers}{exam}\input{%S}"' $<
 
 %.out: %.c
 	cc $(CFLAGS) -o $@ $<
 
 code: $(EXECS)
 
-dist: exam.pdf solution.pdf
-	mkdir -p $@
-	cp exam.pdf solution.pdf $@
-
 clean:
+	$(RM) -rf $(BUILDDIR)
 	$(RM) config.tex
 	latexmk -C
 	$(RM) *.aux *.fdb_latexmk *.fls *.log
@@ -33,6 +32,7 @@ clean:
 	$(RM) *.pgf *.stderr *.stdout *.sh
 	$(RM) *.dpth *.md5 *.auxlock
 	$(RM) -rf release
+
 FORCE:
 
 .PHONY: clean all
