@@ -1,0 +1,232 @@
+%\usepackage{polyglossia}
+\usepackage[french]{babel}
+\usepackage{tabulary}
+\usepackage{xpatch}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{realboxes}
+\usepackage{parskip}
+\usepackage{inconsolata}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage[most,xparse,skins,breakable]{tcolorbox}
+\usetikzlibrary{calc}
+\usepackage{tabularx,ragged2e}
+\usepackage{zref-savepos}
+\usepackage{heiglogo}
+\usepackage{tcolorbox}
+
+\vtword{Total}
+\vqword{Problème}
+
+\setlength{\parskip}{12pt plus 1.0em minus 0pt}
+\setlength{\gridsize}{4mm}
+\setlength{\gridlinewidth}{0.15pt}
+
+\definecolor{GithubGray}{rgb}{0.9,0.9,0.9}
+\definecolor{FillWithDottedLinesColor}{gray}{0.5}
+
+%\setmainlanguage{french}
+%\setotherlanguage{english}
+\AddToHook{env/lstlisting/begin}{\selectlanguage{english}}
+
+\colorfillwithdottedlines
+
+\newtcolorbox{examrules}[1][]{%
+  enhanced jigsaw,
+  sharp corners,
+  colback=white,
+  borderline={1pt}{-2pt}{black},
+  #1
+}
+
+%\newfontface\dejavusansmono{DejaVu Sans Mono}[Scale=MatchLowercase]
+\setmonofont{DejaVu Sans Mono}[Scale=0.9]
+\lstset{
+    language=c,
+    breaklines=true,
+    keywordstyle=\bfseries\color{black},
+    %basicstyle=\dejavusansmono\color{black}\fontsize{9pt}{10pt}\selectfont, % Use Inconsolata for listings
+    basicstyle=\ttfamily\color{black}\fontsize{9pt}{10pt}\selectfont,
+    emphstyle={\em \color{gray}},
+    keepspaces=true,
+    showspaces=false,
+    showtabs=true,
+    tabsize=3,
+    upquote=true,
+    aboveskip=3pt,
+    belowskip=2pt,
+    framexleftmargin=2pt,
+    framextopmargin=3pt,
+    extendedchars=true,
+    columns=fullflexible,
+    literate=
+    {::}{::}1
+    {à}{{\`a}}1
+    {è}{{\`e}}1
+    {é}{{\'e}}1
+    {É}{{\'E}}1
+    {ê}{{\^e}}1
+    {î}{{\^i}}1
+    {ö}{{\"o}}1
+    {œ}{{\oe}}1
+    {°}{\textdegree}1
+    {ç}{{\c{c}}}1
+}
+
+\mdfsetup{%
+  roundcorner=2pt,
+  innerleftmargin=3pt,
+  innertopmargin=5pt,
+  linecolor=black!60,%
+  linewidth=0.3pt,
+  innerbottommargin=3pt,
+  skipabove=1ex,
+}
+
+\renewcommand{\thepartno}{\arabic{partno}}
+
+
+% show marks automatically
+% \xpretocmd{\endparts}{\mydroppoints}{}{}
+
+\renewcommand{\partshook}{%
+  \setlength{\partopsep}{5ex}%
+  \setlength{\leftmargin}{0pt}%
+}
+
+\newcommand{\CD}[1]{\Colorbox{GithubGray}{\lstinline{#1}}}
+
+\def\@maketitle{%
+  \newpage
+  \logo{1.5cm}{1.5cm}%
+
+  \null
+  \vskip 10em%
+  \begin{center}%
+  \let \footnote \thanks
+    {\Huge \bfseries \documentType \par}%
+    {\LARGE \@title \par}%
+    \ifprintanswers
+    \large \textbf{Solution}
+    \fi
+    \vskip 1.0em%
+    {\itshape\department\par}%
+    \vskip .2em%
+    {\itshape\school\par}%
+    \vskip 3.0em%
+    {
+      \lineskip .2em%
+      \begin{minipage}{0.8 \textwidth}%
+      \begin{center}
+      \begin{tabular}[t]{c}%
+        \@author
+      \end{tabular}\par
+      \end{center}
+    \end{minipage}
+    }
+    \vskip 1em%
+    {\large \thedate}%
+  \end{center}%
+  \par
+  \vskip 1.5em}
+
+%% Headers and footers
+\firstpageheader{\school~/~\ifprintanswers Solution \fi \documentType~\course}{}{\enspace\makebox[6cm]{}\bfseries Nom/Prénom :\enspace\makebox[6cm]{\hrulefill}}
+\runningheader{\school~/~\ifprintanswers Solution \fi \documentType~\course}{}{\enspace\makebox[6cm]{}\bfseries Nom/Prénom :\enspace\makebox[6cm]{\hrulefill}}
+
+\footer{\rightmark}
+  {Page \thepage\ sur \pageref{LastPage}}
+  {\course}%{\iflastpage{Fin du travail.}{Aller à la page suivante\ldots}}
+
+\pagestyle{foot}
+
+% Configure the question title
+\qformat{%
+  \xdef\rightmark{Problème \thenumquestions~-- \thequestiontitle}%
+  \Large\textbf{Problème \thenumquestions~-- \thequestiontitle}%
+  \quad ~ \large \emph{(\thepoints)} \hfill
+  \vrule depth 1.5em width 0pt
+  \thispagestyle{headandfoot}%
+}
+
+\newcommand*{\cleartoleftpage}{%
+  \clearpage
+    \if@twoside
+    \ifodd\c@page
+    \thispagestyle{foot}
+      \hbox{}\newpage
+      \if@twocolumn
+      \thispagestyle{foot}
+        \hbox{}\newpage
+      \fi
+    \fi
+  \fi
+}
+
+\newcommand{\problemcover}[3]{
+  \thispagestyle{foot}
+  {\null
+  \vskip 10em%
+  \begin{center}%
+    {\LARGE Problème #1 \par}%
+    \vskip 1.0em%
+    {\Large #2 \par}%
+    \vskip 5em%
+    \partialgradetable{#3}[v][questions]  \vspace*{10ex}
+  \end{center}%
+  \par
+  \vskip 1.5em}
+  \clearpage
+}
+
+\newcounter{NoTableEntry}
+\renewcommand*{\theNoTableEntry}{NTE-\the\value{NoTableEntry}}
+
+\newcommand*{\strike}[2]{%
+  \multicolumn{1}{#1}{%
+    \stepcounter{NoTableEntry}%
+    \vadjust pre{\zsavepos{\theNoTableEntry t}}% top
+    \vadjust{\zsavepos{\theNoTableEntry b}}% bottom
+    \zsavepos{\theNoTableEntry l}% left
+    \hspace{0pt plus 1filll}%
+    #2% content
+    \hspace{0pt plus 1filll}%
+    \zsavepos{\theNoTableEntry r}% right
+    \tikz[overlay]{%
+      \draw
+        let
+          \n{llx}={\zposx{\theNoTableEntry l}sp-\zposx{\theNoTableEntry r}sp-\tabcolsep},
+          \n{urx}={\tabcolsep},
+          \n{lly}={\zposy{\theNoTableEntry b}sp-\zposy{\theNoTableEntry r}sp},
+          \n{ury}={\zposy{\theNoTableEntry t}sp-\zposy{\theNoTableEntry r}sp}
+        in
+        (\n{llx}, \n{lly}) -- (\n{urx}, \n{ury})
+      ;
+      \draw
+        let
+          \n{llx}={\zposx{\theNoTableEntry l}sp-\zposx{\theNoTableEntry r}sp-\tabcolsep},
+          \n{urx}={\tabcolsep},
+          \n{lly}={\zposy{\theNoTableEntry b}sp-\zposy{\theNoTableEntry r}sp},
+          \n{ury}={\zposy{\theNoTableEntry t}sp-\zposy{\theNoTableEntry r}sp}
+        in
+        (\n{llx}, \n{ury}) -- (\n{urx}, \n{lly})
+      ;
+    }%
+  }%
+}
+
+% \newtcolorbox{mySolution}{
+%   enhanced, % Activer les options avancées de tcolorbox
+%   frame hidden, % Masquer le cadre par défaut
+%   borderline west={0.5mm}{0pt}{gray!80}, % Liseret à gauche
+%   colback=white, % Pas de couleur de fond
+%   left=4mm, % Espace entre le liseret et le texte
+%   top=2mm,
+%   bottom=2mm,
+%   before skip=1.5mm,
+%   after skip=1.5mm
+% }
+
+% \renewenvironment{solution}
+%   {\begin{mySolution}}
+%   {\end{mySolution}}

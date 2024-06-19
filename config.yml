@@ -1,0 +1,38 @@
+# Configuration file for this exam
+exam:
+  year: 2024
+  semester: 1
+
+  # Appear as headline all pages
+  name: Examen
+
+  # Name of the examination, and course
+  title: Examen de Physique Théorique
+  course: PhyTheo
+
+  # Date and duration of the examination
+  date: 1970-01-01T10:20:00+01:00
+  duration: 100 # minutes
+
+  # School name and acronym
+  school:
+    name: Haute École d'Ingénierie et de Gestion du Canton de Vaud
+    acronym: HEIG-VD
+  department:
+    name: Département des Technologies Industrielles
+    acronym: TIN
+
+  # List of orientations
+  orientations:
+    - EAI
+    - EEM
+    - EN
+  faculty:
+    name: Génie Électrique
+    acronym: GE
+
+  # List of Teachers
+  teachers:
+    - Dr. Max Planck
+    - Dr. Albert Einstein
+    - Dr. Isaac Newton

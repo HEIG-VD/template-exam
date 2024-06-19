@@ -1,0 +1,78 @@
+\documentclass[a4paper,twoside,addpoints]{exam}
+
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{xfrac}
+\usepackage{tabularx}
+\usepackage{siunitx}
+\usepackage{qrcode}
+\usepackage{float}
+\usepackage{hexam}
+\usepackage{bashful}
+\usepackage{xstring}
+\usepackage{bashful}
+\usepackage{booktabs}
+\usepackage{multicol}
+
+\input{config}
+
+\setmainfont{Latin Modern Roman}
+
+\lstMakeShortInline|
+
+\begin{document}
+\unframedsolutions
+
+\renewcommand{\solutiontitle}{}
+\begin{coverpages}
+  \maketitle
+  \thispagestyle{empty}
+
+  \begin{center}
+    \noindent Durée : \duration~minutes
+    \vfil
+    %La note est calculée par la relation : $\text{note} = \sfrac{\text{total}}{10} + 1$.
+  \end{center}
+
+  \begin{center}
+    \gradetable[v][questions]
+  \end{center}
+  \vfil
+  \input{directives}
+\end{coverpages}
+
+\newpage
+\thispagestyle{empty}
+\null\vfill
+\newpage
+\setcounter{page}{1}
+
+% Input all questions/problems
+\begin{questions}
+% Change the number of problems here
+\foreach \i in {1,...,1} {%
+  \edef\FileName{problem\i}%
+  \IfFileExists{\FileName}{%
+      \input{\FileName}%
+      \cleardoublepage
+  }
+}
+\end{questions}
+
+% End of cover pages
+\clearpage
+\thispagestyle{empty}
+\null
+\label{LastPage}
+\clearpage
+\thispagestyle{empty}
+\null
+\vfill
+
+\begin{center}
+Fin de l'examen.
+\end{center}
+\vskip 2em
+\raggedleft\commit\quad\qrcode{\commiturl}
+
+\end{document}
