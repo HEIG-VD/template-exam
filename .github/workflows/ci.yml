@@ -17,13 +17,11 @@ jobs:
         run: docker build . -t exam -f .devcontainer/Dockerfile
       - name: Build exam
         run: docker run -v $GITHUB_WORKSPACE:/srv -w/srv exam make
-      - name: Move
-        run : mkdir -p build && mv *.pdf build
       - name: Upload exam
         uses: actions/upload-artifact@v2
         with:
           name: exam
-          path: build
+          path: dist
           if-no-files-found: error
   release:
     name: Create Release
@@ -53,7 +51,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/exam.pdf
+          asset_path: dist
           asset_name: exam.pdf
           asset_content_type: application/pdf
       - name: Upload Solution
@@ -63,6 +61,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/solution.pdf
+          asset_path: dist
           asset_name: solution.pdf
           asset_content_type: application/pdf
