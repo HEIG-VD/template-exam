@@ -15,24 +15,13 @@ exam.pdf: exam.tex FORCE | config.tex code $(TEXSRC)
 solution.pdf: exam.tex FORCE | config.tex code $(TEXSRC)
 	latexmk --shell-escape -pdf -jobname=$(basename $@) -pdflatex='xelatex %O "\PassOptionsToClass{answers}{exam}\input{%S}"' $<
 
-assembly: exam.pdf | refcard.pdf
-	qpdf --empty --pages $< 1-2,r2-r1 -- cover.pdf
-	qpdf --empty --pages $< 3-4 -- p1.pdf
-	qpdf --empty --pages $< 5-8 -- p2.pdf
-	qpdf --empty --pages $< 9-10 -- p3.pdf
-	qpdf --empty --pages $< 11-r3 -- p4.pdf
-
 %.out: %.c
 	cc $(CFLAGS) -o $@ $<
 
 code: $(EXECS)
 
-refcard.pdf:
-	wget https://github.com/heig-tin-info/refcard/releases/download/2.6.6/refcard.pdf
-
-release: assembly refcard.pdf exam.pdf solution.pdf
+release: assembly exam.pdf solution.pdf
 	mkdir -p release
-	cp refcard.pdf $@
 	cp p*.pdf $@
 	cp exam.pdf solution.pdf $@
 

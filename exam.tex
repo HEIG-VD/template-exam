@@ -2,6 +2,8 @@
 
 \usepackage{fontspec}
 \usepackage{amsmath}
+\usepackage{circuitikz}
+\usepackage{siunitx}
 \usepackage{xfrac}
 \usepackage{tabularx}
 \usepackage{siunitx}
@@ -50,7 +52,8 @@
 % Input all questions/problems
 \begin{questions}
 % Change the number of problems here
-\foreach \i in {1,...,1} {%
+\def\NumberOfProblems{3}
+\foreach \i in {1,...,\NumberOfProblems} {%
   \edef\FileName{problem\i}%
   \IfFileExists{\FileName}{%
       \input{\FileName}%

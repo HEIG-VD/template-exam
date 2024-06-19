@@ -6,13 +6,14 @@ import git
 from textwrap import dedent
 from babel.dates import format_date
 
-if len(sys.argv) != 1:
+if len(sys.argv) < 2:
     print(dedent('''
         Usage: parse-yml.py <file> < template
 
         Load metadata from a YAML file and render it using a Jinja2 template.
         Inject the Git SHA and URL of the repository.
         '''))
+    exit(1)
 
 with open(sys.argv[1], 'r') as f:
     yml = yaml.safe_load(f)
