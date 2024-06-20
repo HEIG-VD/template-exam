@@ -8,19 +8,22 @@ LATEXMK=TEXMFHOME=$(shell pwd)/texmf texfot latexmk
 
 all: exam.pdf solution.pdf
 
-$(BUILDDIR)/config.tex: config.yml | tools/config.m.tex tools/parse-yml.py
+$(BUILDDIR)/config.tex: config.yml | tools/config.m.tex tools/parse-yml.py $(BUILDDIR)
 	./tools/parse-yml.py $< > $@ < tools/config.m.tex
 
-exam.pdf: exam.tex FORCE | $(BUILDDIR)/config.tex code $(TEXSRC)
+exam.pdf: exam.tex FORCE | $(BUILDDIR)/config.tex code $(TEXSRC) $(BUILDDIR)
 	$(LATEXMK) -jobname=$(basename $@) $<
 
-solution.pdf: exam.tex FORCE | $(BUILDDIR)/config.tex code $(TEXSRC)
+solution.pdf: exam.tex FORCE | $(BUILDDIR)/config.tex code $(TEXSRC) $(BUILDDIR)
 	$(LATEXMK) -jobname=$(basename $@) -pdflatex='xelatex %O "\PassOptionsToClass{answers}{exam}\input{%S}"' $<
 
 %.out: %.c
 	cc $(CFLAGS) -o $@ $<
 
 code: $(EXECS)
+
+$(BUILDDIR):
+	mkdir -p $@
 
 clean:
 	$(RM) -rf $(BUILDDIR)
